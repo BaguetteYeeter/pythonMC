@@ -11,6 +11,8 @@ pygame.display.set_caption("pythonMC")
 
 currentCell = 1
 prevCell = 0
+noGravity = 0
+isJump = False
 
 run = True
 while run:
@@ -22,14 +24,26 @@ while run:
 
     mainScreen.fill((0, 0, 0))
 
+    if noGravity == 0:
+        if cells[currentCell + 10] == 0:
+            currentCell += 10
+        isJump = False
+    else:
+        noGravity -= 1
+
     if keys[pygame.K_UP]:
-        currentCell -= 10
-    if keys[pygame.K_DOWN]:
-        currentCell += 10
+        if cells[currentCell + 10] != 0:
+            if cells[currentCell - 10] == 0:
+                currentCell -= 10
+            if noGravity == 0 and not isJump:
+                noGravity = 2
+                isJump = True
     if keys[pygame.K_LEFT]:
-        currentCell -= 1
+        if cells[currentCell - 1] == 0:
+            currentCell -= 1
     if keys[pygame.K_RIGHT]:
-        currentCell += 1
+        if cells[currentCell + 1] == 0:
+            currentCell += 1
 
     if prevCell != currentCell:
         cells[prevCell] = 0
