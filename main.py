@@ -1,6 +1,7 @@
 import pygame
 import random
 from world import *
+import math
 
 #map
 cells = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -12,33 +13,40 @@ pygame.init()
 mainScreen = pygame.display.set_mode((500, 500))
 pygame.display.set_caption("pythonMC")
 
+def save():
+    f = open("world.py", "w")
+    f.write("\nblockA = " + str(blockA) + "\nblockB = " + str(blockB) + "\nblockC = " + str(blockC) + "\nblockD = " + str(blockD) + "\nblockE = " + str(blockE) + "\nblockF = " + str(blockF) + "\nblockG = " + str(blockG) + "\nblockH = " + str(blockH) + "\nblockI = " + str(blockI) + "\nblockJ = " + str(blockJ))
+    f.close()
+
+loc = 0
 #set the current map to world.py
 for i in range(1, 11):
-    cells[i] = blockA[i]
+    cells[i] = blockA[i + loc]
 for i in range(1, 11):
-    cells[i+10] = blockB[i]
+    cells[i+10] = blockB[i + loc]
 for i in range(1, 11):
-    cells[i+20] = blockC[i]
+    cells[i+20] = blockC[i + loc]
 for i in range(1, 11):
-    cells[i+30] = blockD[i]
+    cells[i+30] = blockD[i + loc]
 for i in range(1, 11):
-    cells[i+40] = blockE[i]
+    cells[i+40] = blockE[i + loc]
 for i in range(1, 11):
-    cells[i+50] = blockF[i]
+    cells[i+50] = blockF[i + loc]
 for i in range(1, 11):
-    cells[i+60] = blockG[i]
+    cells[i+60] = blockG[i + loc]
 for i in range(1, 11):
-    cells[i+70] = blockH[i]
+    cells[i+70] = blockH[i + loc]
 for i in range(1, 11):
-    cells[i+80] = blockI[i]
+    cells[i+80] = blockI[i + loc]
 for i in range(1, 11):
-    cells[i+90] = blockJ[i]
+    cells[i+90] = blockJ[i + loc]
 
 #var
 currentCell = 1
 prevCell = 0
 noGravity = 0
 isJump = False
+hotel = "trivago"
 
 #loop
 run = True
@@ -81,6 +89,8 @@ while run:
         cells[prevCell] = 0
     prevCell = currentCell
 
+    #map movement
+
     #tile to tile interaction support (TTTIS)
     for i in range(1,101):
         if cells[i] == 2:
@@ -93,6 +103,32 @@ while run:
                     dirtChance = random.randint(1, 10)
                     if dirtChance == 3:
                         cells[i] = 2
+
+    for i in range (1, 101):
+        if cells[i] == 1:
+            cells[i] = 0
+
+    for i in range(1, 11):
+        blockA[i + loc] = cells[i]
+    for i in range(1, 11):
+        blockB[i + loc] = cells[i+10]
+    for i in range(1, 11):
+        blockC[i + loc] = cells[i+20]
+    for i in range(1, 11):
+        blockD[i + loc] = cells[i+30]
+    for i in range(1, 11):
+        blockE[i + loc] = cells[i+40]
+    for i in range(1, 11):
+        blockF[i + loc] = cells[i+50]
+    for i in range(1, 11):
+        blockG[i + loc] = cells[i+60]
+    for i in range(1, 11):
+        blockH[i + loc] = cells[i+70]
+    for i in range(1, 11):
+        blockI[i + loc] = cells[i+80]
+    for i in range(1, 11):
+        blockJ[i + loc] = cells[i+90]
+    save()
 
     #set the player
     cells[currentCell] = 1
