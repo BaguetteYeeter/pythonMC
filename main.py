@@ -171,8 +171,9 @@ while run:
                 grassChance = random.randint(1, 10)
                 if grassChance == 3:
                     cells[i] = 3
-            if i < 91:
-                if cells[i + 10] != 0:
+        elif cells[i] == 3:
+            if True:
+                if cells[i - 10] != 0 and cells[i - 10] != 1:
                     dirtChance = random.randint(1, 10)
                     if dirtChance == 3:
                         cells[i] = 2
