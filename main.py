@@ -221,6 +221,8 @@ while run:
             pygame.draw.rect(mainScreen, (173, 58, 0), (cellX[i], cellY[i], 50, 50))
         elif cells[i] == 3:
             pygame.draw.rect(mainScreen, (2, 179, 14), (cellX[i], cellY[i], 50, 50))
+        elif cells[i] == 4:
+            pygame.draw.rect(mainScreen, (127, 127, 127), (cellX[i], cellY[i], 50, 50))
 
     pygame.display.update()
 
