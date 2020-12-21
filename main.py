@@ -78,11 +78,64 @@ while run:
                 noGravity = 2
                 isJump = True
     if keys[pygame.K_LEFT]:
-        if cells[currentCell - 1] == 0:
-            currentCell -= 1
+        if True:
+            if (currentCell - 1) / 10 == int((currentCell - 1) / 10):
+                if loc != 0:
+                    loc -= 1
+                    for i in range(1, 11):
+                        cells[i] = blockA[i + loc]
+                    for i in range(1, 11):
+                        cells[i+10] = blockB[i + loc]
+                    for i in range(1, 11):
+                        cells[i+20] = blockC[i + loc]
+                    for i in range(1, 11):
+                        cells[i+30] = blockD[i + loc]
+                    for i in range(1, 11):
+                        cells[i+40] = blockE[i + loc]
+                    for i in range(1, 11):
+                        cells[i+50] = blockF[i + loc]
+                    for i in range(1, 11):
+                        cells[i+60] = blockG[i + loc]
+                    for i in range(1, 11):
+                        cells[i+70] = blockH[i + loc]
+                    for i in range(1, 11):
+                        cells[i+80] = blockI[i + loc]
+                    for i in range(1, 11):
+                        cells[i+90] = blockJ[i + loc]
+                    if cells[currentCell] != 0:
+                        currentCell += 1
+            else:
+                if cells[currentCell - 1] == 0:
+                    currentCell -= 1
     if keys[pygame.K_RIGHT]:
-        if cells[currentCell + 1] == 0:
-            currentCell += 1
+            if currentCell / 10 == int(currentCell / 10):
+                loc = loc + 1
+
+                for i in range(1, 11):
+                    cells[i] = blockA[i + loc]
+                for i in range(1, 11):
+                    cells[i+10] = blockB[i + loc]
+                for i in range(1, 11):
+                    cells[i+20] = blockC[i + loc]
+                for i in range(1, 11):
+                    cells[i+30] = blockD[i + loc]
+                for i in range(1, 11):
+                    cells[i+40] = blockE[i + loc]
+                for i in range(1, 11):
+                    cells[i+50] = blockF[i + loc]
+                for i in range(1, 11):
+                    cells[i+60] = blockG[i + loc]
+                for i in range(1, 11):
+                    cells[i+70] = blockH[i + loc]
+                for i in range(1, 11):
+                    cells[i+80] = blockI[i + loc]
+                for i in range(1, 11):
+                    cells[i+90] = blockJ[i + loc]
+                if cells[currentCell] != 0:
+                    currentCell -= 1
+            else:
+                if cells[currentCell + 1] == 0:
+                    currentCell += 1
 
     #i have no clue
     if prevCell != currentCell:
@@ -90,6 +143,26 @@ while run:
     prevCell = currentCell
 
     #map movement
+    for i in range(1, 11):
+        cells[i] = blockA[i + loc]
+    for i in range(1, 11):
+        cells[i+10] = blockB[i + loc]
+    for i in range(1, 11):
+        cells[i+20] = blockC[i + loc]
+    for i in range(1, 11):
+        cells[i+30] = blockD[i + loc]
+    for i in range(1, 11):
+        cells[i+40] = blockE[i + loc]
+    for i in range(1, 11):
+        cells[i+50] = blockF[i + loc]
+    for i in range(1, 11):
+        cells[i+60] = blockG[i + loc]
+    for i in range(1, 11):
+        cells[i+70] = blockH[i + loc]
+    for i in range(1, 11):
+        cells[i+80] = blockI[i + loc]
+    for i in range(1, 11):
+        cells[i+90] = blockJ[i + loc]
 
     #tile to tile interaction support (TTTIS)
     for i in range(1,101):
@@ -104,10 +177,12 @@ while run:
                     if dirtChance == 3:
                         cells[i] = 2
 
+    #gets rid of player for save
     for i in range (1, 101):
         if cells[i] == 1:
             cells[i] = 0
 
+    #saves the world
     for i in range(1, 11):
         blockA[i + loc] = cells[i]
     for i in range(1, 11):
@@ -129,6 +204,8 @@ while run:
     for i in range(1, 11):
         blockJ[i + loc] = cells[i+90]
     save()
+
+    #moves player when map moves
 
     #set the player
     cells[currentCell] = 1
