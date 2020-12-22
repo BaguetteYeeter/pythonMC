@@ -406,6 +406,7 @@ loadMap(locY)
 
 #var
 currentCell = 1
+selectCell = 1
 prevCell = 0
 noGravity = 0
 isJump = False
@@ -424,7 +425,7 @@ while run:
     #fill the screen
     mainScreen.fill((0, 0, 0))
 
-    #gravity
+    #gravity / down
     if noGravity == 0:
         if currentCell > 90:
             locY += 1
@@ -434,11 +435,15 @@ while run:
                 loadMap(locY)
                 if cells[currentCell] != 0:
                     currentCell -= 10
+                    selectCell -= 10
             if cells[currentCell] != 0:
                 currentCell -= 10
+                selectCell -= 10
         else:
             if cells[currentCell + 10] == 0:
                 currentCell += 10
+                if selectCell < 91:
+                    selectCell += 10
             isJump = False
     else:
         noGravity -= 1
@@ -453,8 +458,11 @@ while run:
                     loadMap(locY)
                     if cells[currentCell] != 0:
                         currentCell += 10
+                        selectCell += 10
                 elif cells[currentCell - 10] == 0:
                     currentCell -= 10
+                    if selectCell > 11:
+                        selectCell -= 10
                 if noGravity == 0 and not isJump:
                     noGravity = 2
                     isJump = True
@@ -466,18 +474,52 @@ while run:
                     loadMap(locY)
                     if cells[currentCell] != 0:
                         currentCell += 1
+                        selectCell += 1
             else:
                 if cells[currentCell - 1] == 0:
                     currentCell -= 1
+                    if (selectCell - 1) / 10 != int((selectCell - 1) / 10):
+                        selectCell -= 1
     if keys[pygame.K_RIGHT]:
             if currentCell / 10 == int(currentCell / 10):
                 locX= locX+ 1
                 loadMap(locY)
                 if cells[currentCell] != 0:
                     currentCell -= 1
+                    selectCell -= 1
             else:
                 if cells[currentCell + 1] == 0:
                     currentCell += 1
+                    if selectCell / 10 != int(selectCell / 10):
+                        selectCell += 1
+    if keys[pygame.K_w]:
+        if selectCell > 10:
+            if selectCell != currentCell - 10 and selectCell != currentCell - 11 and selectCell != currentCell - 9:
+                selectCell -= 10
+    if keys[pygame.K_a]:
+        if (selectCell - 1) / 10 != int((selectCell - 1) / 10):
+            if selectCell != currentCell - 1 and selectCell != currentCell - 11 and selectCell != currentCell + 9:
+                selectCell -= 1
+    if keys[pygame.K_s]:
+        if selectCell < 91:
+            if selectCell != currentCell + 10 and selectCell != currentCell + 11 and selectCell != currentCell + 9:
+                selectCell += 10
+    if keys[pygame.K_d]:
+        if selectCell / 10 != int(selectCell / 10):
+            if selectCell != currentCell + 1 and selectCell != currentCell + 11 and selectCell != currentCell - 9:
+                selectCell += 1
+    if keys[pygame.K_e]:
+        cells[selectCell] = 0
+        saveMap(locY)
+    if keys[pygame.K_2]:
+        cells[selectCell] = 2
+        saveMap(locY)
+    if keys[pygame.K_3]:
+        cells[selectCell] = 3
+        saveMap(locY)
+    if keys[pygame.K_4]:
+        cells[selectCell] = 4
+        saveMap(locY)
 
     #i have no clue
     if prevCell != currentCell:
@@ -527,6 +569,8 @@ while run:
             pygame.draw.rect(mainScreen, (127, 127, 127), (cellX[i], cellY[i], 50, 50))
         elif cells[i] == 5:
             pygame.draw.rect(mainScreen, (69, 69, 69), (cellX[i], cellY[i], 50, 50))
+        if selectCell == i:
+            mainScreen.blit(pygame.image.load("select.png"), (cellX[i], cellY[i]))
 
     pygame.display.update()
 
