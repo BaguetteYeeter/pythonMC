@@ -2,6 +2,8 @@ import pygame
 import random
 from world import *
 import math
+import sys
+import getopt
 
 #map
 cells = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -12,6 +14,44 @@ cellY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50
 pygame.init()
 mainScreen = pygame.display.set_mode((500, 500))
 pygame.display.set_caption("pythonMC")
+
+
+#args
+pack = "default"
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "hp:", ["pack="])
+except getopt.GetoptError:
+    print("main.py -p [texture pack]")
+    sys.exit(2)
+for opt, arg in opts:
+    if opt == "-h":
+        print("main.py -p [texture pack]")
+        sys.exit()
+    elif opt in ("-p", "--pack"):
+        pack = arg
+        print(arg)
+
+#texture pack load
+class textures:
+    print("loading textures")
+    grass = pygame.image.load("textures/" + pack + "/blocks/grass.png")
+    dirt = pygame.image.load("textures/" + pack + "/blocks/dirt.png")
+    stone = pygame.image.load("textures/" + pack + "/blocks/stone.png")
+    slot = pygame.image.load("textures/" + pack + "/inventory/background/slot.png")
+    number1 = pygame.image.load("textures/" + pack + "/inventory/background/1.png")
+    number2 = pygame.image.load("textures/" + pack + "/inventory/background/2.png")
+    number3 = pygame.image.load("textures/" + pack + "/inventory/background/3.png")
+    number4 = pygame.image.load("textures/" + pack + "/inventory/background/4.png")
+    number5 = pygame.image.load("textures/" + pack + "/inventory/background/5.png")
+    number6 = pygame.image.load("textures/" + pack + "/inventory/background/6.png")
+    number7 = pygame.image.load("textures/" + pack + "/inventory/background/7.png")
+    number8 = pygame.image.load("textures/" + pack + "/inventory/background/8.png")
+    number9 = pygame.image.load("textures/" + pack + "/inventory/background/9.png")
+    number0 = pygame.image.load("textures/" + pack + "/inventory/background/0.png")
+    inventoryGrass = pygame.image.load("textures/" + pack + "/inventory/blocks/grass.png")
+    inventoryDirt = pygame.image.load("textures/" + pack + "/inventory/blocks/dirt.png")
+    inventoryStone = pygame.image.load("textures/" + pack + "/inventory/blocks/stone.png")
+    print("done")
 
 #lag
 def loadMap(locY):
@@ -562,11 +602,11 @@ while run:
         elif cells[i] == 0:
             pygame.draw.rect(mainScreen, (3, 215, 252), (cellX[i], cellY[i], 50, 50))
         elif cells[i] == 2:
-            pygame.draw.rect(mainScreen, (173, 58, 0), (cellX[i], cellY[i], 50, 50))
+            mainScreen.blit(textures.dirt, (cellX[i], cellY[i]))
         elif cells[i] == 3:
-            pygame.draw.rect(mainScreen, (2, 179, 14), (cellX[i], cellY[i], 50, 50))
+            mainScreen.blit(textures.grass, (cellX[i], cellY[i]))
         elif cells[i] == 4:
-            pygame.draw.rect(mainScreen, (127, 127, 127), (cellX[i], cellY[i], 50, 50))
+            mainScreen.blit(textures.stone, (cellX[i], cellY[i]))
         elif cells[i] == 5:
             pygame.draw.rect(mainScreen, (69, 69, 69), (cellX[i], cellY[i], 50, 50))
         if selectCell == i:
