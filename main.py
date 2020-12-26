@@ -18,8 +18,11 @@ pygame.display.set_caption("pythonMC")
 
 #args
 pack = "default"
+generateWorld = 0
+seed = random.randint(1000, 999999)
+
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hp:", ["pack="])
+    opts, args = getopt.getopt(sys.argv[1:], "hp:gs:", ["pack=", "generate", "seed="])
 except getopt.GetoptError:
     print("main.py -p [texture pack]")
     sys.exit(2)
@@ -30,6 +33,12 @@ for opt, arg in opts:
     elif opt in ("-p", "--pack"):
         pack = arg
         print(arg)
+    elif opt in ("-g", "--generate"):
+        generateWorld = 1
+    elif opt in ("-s", "--seed"):
+        seed = int(arg)
+
+random.seed(seed)
 
 #texture pack load
 class textures:
@@ -54,7 +63,7 @@ class textures:
     print("done")
 
 #lag
-def loadMap(locY):
+def loadMap(locX, locY):
     for i in range(1, 11):
         if locY == 0:
             cells[i] = blockA[i + locX]
@@ -244,7 +253,7 @@ def loadMap(locY):
             cells[i+80] = blockY[i + locX]
             cells[i+90] = blockZ[i + locX]
 
-def saveMap(locY):
+def saveMap(locX, locY):
     for i in range(1, 11):
         if locY == 0:
             blockA[i + locX] = cells[i]
@@ -442,7 +451,67 @@ def save():
 locX = 0
 locY = 0
 #set the current map to world.py
-loadMap(locY)
+loadMap(locX, locY)
+
+#generate a world
+if generateWorld == 1:
+    print("Generating World")
+    for i in range(1, 100):
+        loadMap(locX, locY)
+        blockA[i] = 0
+        blockB[i] = 0
+        blockC[i] = 0
+        blockD[i] = 0
+        blockE[i] = 0
+        blockF[i] = 0
+        blockG[i] = 0
+        blockH[i] = 0
+        blockI[i] = 0
+        blockJ[i] = 0
+        blockK[i] = 0
+        blockL[i] = 4
+        blockM[i] = 4
+        blockN[i] = 4
+        blockO[i] = 4
+        blockP[i] = 4
+        blockQ[i] = 4
+        blockR[i] = 4
+        blockS[i] = 4
+        blockT[i] = 4
+        blockU[i] = 4
+        blockV[i] = 4
+        blockW[i] = 4
+        blockX[i] = 4
+        blockY[i] = 4
+        blockZ[i] = 5
+        saveMap(locX, locY)
+    save()
+    locY = 1
+    loadMap(locX, locY)
+    for i in range(1, 89):
+        grassHeight = random.randint(2,8)
+        if math.floor(grassHeight) in (0, 1, 2):
+            grassHeight = 3
+        if math.floor(grassHeight / 3) == 1:
+            cells[81] = 3
+            cells[91] = 2
+        if math.floor(grassHeight / 3) == 2:
+            cells[71] = 3
+            cells[81] = 2
+            cells[91] = 4
+        if math.floor(grassHeight / 3) == 3:
+            cells[61] = 3
+            cells[71] = 2
+            cells[81] = 4
+            cells[91] = 4
+        saveMap(locX, locY)
+        locX += 1
+        loadMap(locX, locY)
+        print(str(i) + "% done")
+    locX = 0
+    locY = 0
+    loadMap(locX, locY)
+    print("100% done")
 
 #var
 currentCell = 1
@@ -469,10 +538,10 @@ while run:
     if noGravity == 0:
         if currentCell > 90:
             locY += 1
-            loadMap(locY)
+            loadMap(locX, locY)
             if cells[currentCell] == 0:
                 locY += 1
-                loadMap(locY)
+                loadMap(locX, locY)
                 if cells[currentCell] != 0:
                     currentCell -= 10
                     selectCell -= 10
@@ -495,7 +564,7 @@ while run:
                 if currentCell < 10:
                     if locY != 0:
                         locY -= 1
-                    loadMap(locY)
+                    loadMap(locX, locY)
                     if cells[currentCell] != 0:
                         currentCell += 10
                         selectCell += 10
@@ -511,7 +580,7 @@ while run:
             if (currentCell - 1) / 10 == int((currentCell - 1) / 10):
                 if locX!= 0:
                     locX-= 1
-                    loadMap(locY)
+                    loadMap(locX, locY)
                     if cells[currentCell] != 0:
                         currentCell += 1
                         selectCell += 1
@@ -523,7 +592,7 @@ while run:
     if keys[pygame.K_RIGHT]:
             if currentCell / 10 == int(currentCell / 10):
                 locX= locX+ 1
-                loadMap(locY)
+                loadMap(locX, locY)
                 if cells[currentCell] != 0:
                     currentCell -= 1
                     selectCell -= 1
@@ -550,16 +619,16 @@ while run:
                 selectCell += 1
     if keys[pygame.K_e]:
         cells[selectCell] = 0
-        saveMap(locY)
+        saveMap(locX, locY)
     if keys[pygame.K_2]:
         cells[selectCell] = 2
-        saveMap(locY)
+        saveMap(locX, locY)
     if keys[pygame.K_3]:
         cells[selectCell] = 3
-        saveMap(locY)
+        saveMap(locX, locY)
     if keys[pygame.K_4]:
         cells[selectCell] = 4
-        saveMap(locY)
+        saveMap(locX, locY)
 
     #i have no clue
     if prevCell != currentCell:
@@ -567,7 +636,7 @@ while run:
     prevCell = currentCell
 
     #map movement
-    loadMap(locY)
+    loadMap(locX, locY)
 
     #tile to tile interaction support (TTTIS)
     for i in range(1,101):
@@ -589,7 +658,7 @@ while run:
             cells[i] = 0
 
     #saves the world
-    saveMap(locY)
+    saveMap(locX, locY)
     save()
 
     #set the player
