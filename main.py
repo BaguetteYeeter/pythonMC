@@ -46,6 +46,8 @@ class textures:
     grass = pygame.image.load("textures/" + pack + "/blocks/grass.png")
     dirt = pygame.image.load("textures/" + pack + "/blocks/dirt.png")
     stone = pygame.image.load("textures/" + pack + "/blocks/stone.png")
+    wood = pygame.image.load("textures/" + pack + "/blocks/wood.png")
+    leaves = pygame.image.load("textures/" + pack + "/blocks/leaves.png")
     slot = pygame.image.load("textures/" + pack + "/inventory/background/slot.png")
     number1 = pygame.image.load("textures/" + pack + "/inventory/background/1.png")
     number2 = pygame.image.load("textures/" + pack + "/inventory/background/2.png")
@@ -60,6 +62,8 @@ class textures:
     inventoryGrass = pygame.image.load("textures/" + pack + "/inventory/blocks/grass.png")
     inventoryDirt = pygame.image.load("textures/" + pack + "/inventory/blocks/dirt.png")
     inventoryStone = pygame.image.load("textures/" + pack + "/inventory/blocks/stone.png")
+    inventoryWood = pygame.image.load("textures/" + pack + "/inventory/blocks/wood.png")
+    inventoryLeaves = pygame.image.load("textures/" + pack + "/inventory/blocks/leaves.png")
     print("done")
 
 #lag
@@ -629,6 +633,12 @@ while run:
     if keys[pygame.K_4]:
         cells[selectCell] = 4
         saveMap(locX, locY)
+    if keys[pygame.K_6]:
+        cells[selectCell] = 6
+        saveMap(locX, locY)
+    if keys[pygame.K_7]:
+        cells[selectCell] = 7
+        saveMap(locX, locY)
 
     #i have no clue
     if prevCell != currentCell:
@@ -678,8 +688,13 @@ while run:
             mainScreen.blit(textures.stone, (cellX[i], cellY[i]))
         elif cells[i] == 5:
             pygame.draw.rect(mainScreen, (69, 69, 69), (cellX[i], cellY[i], 50, 50))
+        elif cells[i] == 6:
+            mainScreen.blit(textures.wood, (cellX[i], cellY[i]))
+        elif cells[i] == 7:
+            pygame.draw.rect(mainScreen, (3, 215, 252), (cellX[i], cellY[i], 50, 50))
+            mainScreen.blit(textures.leaves, (cellX[i], cellY[i]))
         if selectCell == i:
-            mainScreen.blit(pygame.image.load("select.png"), (cellX[i], cellY[i]))
+            mainScreen.blit(pygame.image.load("textures/" + pack + "/select.png"), (cellX[i], cellY[i]))
 
     pygame.display.update()
 
