@@ -12,7 +12,7 @@ cellY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50
 
 #pygame stuff
 pygame.init()
-mainScreen = pygame.display.set_mode((500, 500))
+mainScreen = pygame.display.set_mode((500, 550))
 pygame.display.set_caption("pythonMC")
 
 
@@ -64,6 +64,7 @@ class textures:
     inventoryStone = pygame.image.load("textures/" + pack + "/inventory/blocks/stone.png")
     inventoryWood = pygame.image.load("textures/" + pack + "/inventory/blocks/wood.png")
     inventoryLeaves = pygame.image.load("textures/" + pack + "/inventory/blocks/leaves.png")
+    select = pygame.image.load("textures/" + pack + "/select.png")
     print("done")
 
 #lag
@@ -449,8 +450,27 @@ def saveMap(locX, locY):
 
 def save():
     f = open("world.py", "w")
-    f.write("\nblockA = " + str(blockA) + "\nblockB = " + str(blockB) + "\nblockC = " + str(blockC) + "\nblockD = " + str(blockD) + "\nblockE = " + str(blockE) + "\nblockF = " + str(blockF) + "\nblockG = " + str(blockG) + "\nblockH = " + str(blockH) + "\nblockI = " + str(blockI) + "\nblockJ = " + str(blockJ) + "\nblockK = " + str(blockK) + "\nblockL = " + str(blockL) + "\nblockM = " + str(blockM) + "\nblockN = " + str(blockN) + "\nblockO = " + str(blockO) + "\nblockP = " + str(blockP) + "\nblockQ = " + str(blockQ) + "\nblockR = " + str(blockR) + "\nblockS = " + str(blockS) + "\nblockT = " + str(blockT) + "\nblockU = " + str(blockU) + "\nblockV = " + str(blockV) + "\nblockW = " + str(blockW) + "\nblockX = " + str(blockX) + "\nblockY = " + str(blockY) + "\nblockZ = " + str(blockZ))
+    f.write("\nblockA = " + str(blockA) + "\nblockB = " + str(blockB) + "\nblockC = " + str(blockC) + "\nblockD = " + str(blockD) + "\nblockE = " + str(blockE) + "\nblockF = " + str(blockF) + "\nblockG = " + str(blockG) + "\nblockH = " + str(blockH) + "\nblockI = " + str(blockI) + "\nblockJ = " + str(blockJ) + "\nblockK = " + str(blockK) + "\nblockL = " + str(blockL) + "\nblockM = " + str(blockM) + "\nblockN = " + str(blockN) + "\nblockO = " + str(blockO) + "\nblockP = " + str(blockP) + "\nblockQ = " + str(blockQ) + "\nblockR = " + str(blockR) + "\nblockS = " + str(blockS) + "\nblockT = " + str(blockT) + "\nblockU = " + str(blockU) + "\nblockV = " + str(blockV) + "\nblockW = " + str(blockW) + "\nblockX = " + str(blockX) + "\nblockY = " + str(blockY) + "\nblockZ = " + str(blockZ) + "\nhotbar = " + str(hotbar) + "\namountHotbar = " + str(amountHotbar))
     f.close()
+
+def addHotbar():
+    done = 0
+    for i in range(0, 10):
+        if cells[selectCell] == hotbar[i]:
+            amountHotbar[i] += 1
+            return
+    for i in range(0, 10):
+        if hotbar[i] == 0:
+            amountHotbar[i] += 1
+            hotbar[i] = cells[selectCell]
+            done = 1
+        if done == 1:
+            done = 0
+            return
+def removeHotbar():
+    amountHotbar[currentHotbarCell] -= 1
+    if amountHotbar[currentHotbarCell] == 0:
+        hotbar[currentHotbarCell] = 0
 
 locX = 0
 locY = 0
@@ -523,6 +543,7 @@ selectCell = 1
 prevCell = 0
 noGravity = 0
 isJump = False
+currentHotbarCell = 0
 hotel = "trivago"
 
 #loop
@@ -621,24 +642,21 @@ while run:
         if selectCell / 10 != int(selectCell / 10):
             if selectCell != currentCell + 1 and selectCell != currentCell + 11 and selectCell != currentCell - 9:
                 selectCell += 1
-    if keys[pygame.K_e]:
+    if keys[pygame.K_e] and cells[selectCell] > 1:
+        addHotbar()
         cells[selectCell] = 0
         saveMap(locX, locY)
-    if keys[pygame.K_2]:
-        cells[selectCell] = 2
-        saveMap(locX, locY)
-    if keys[pygame.K_3]:
-        cells[selectCell] = 3
-        saveMap(locX, locY)
-    if keys[pygame.K_4]:
-        cells[selectCell] = 4
-        saveMap(locX, locY)
-    if keys[pygame.K_6]:
-        cells[selectCell] = 6
-        saveMap(locX, locY)
-    if keys[pygame.K_7]:
-        cells[selectCell] = 7
-        saveMap(locX, locY)
+    if keys[pygame.K_MINUS]:
+        if currentHotbarCell != 0:
+            currentHotbarCell -= 1
+    if keys[pygame.K_EQUALS]:
+        if currentHotbarCell != 9:
+            currentHotbarCell += 1
+    if keys[pygame.K_q]:
+        if amountHotbar[currentHotbarCell] != 0 and cells[selectCell] == 0:
+            cells[selectCell] = hotbar[currentHotbarCell]
+            removeHotbar()
+            saveMap(locX, locY)
 
     #i have no clue
     if prevCell != currentCell:
@@ -673,6 +691,24 @@ while run:
 
     #set the player
     cells[currentCell] = 1
+
+    for i in range(0, 10):
+        mainScreen.blit(textures.slot, (i * 50, 500))
+        if hotbar[i] == 2:
+            mainScreen.blit(textures.inventoryDirt, (i * 50, 500))
+        elif hotbar[i] == 3:
+            mainScreen.blit(textures.inventoryGrass, (i * 50, 500))
+        elif hotbar[i] == 4:
+            mainScreen.blit(textures.inventoryStone, (i * 50, 500))
+        elif hotbar[i] == 6:
+            mainScreen.blit(textures.inventoryWood, (i * 50, 500))
+        elif hotbar[i] == 7:
+            mainScreen.blit(textures.inventoryLeaves, (i * 50, 500))
+    mainScreen.blit(textures.select, (currentHotbarCell * 50, 500))
+    for i in range(0, 10):
+        if amountHotbar[i] != 0:
+            mainScreen.blit(pygame.image.load("textures/" + pack + "/inventory/background/" + str(math.floor(amountHotbar[i] / 10)) + ".png"), (i * 50 + 30, 540))
+            mainScreen.blit(pygame.image.load("textures/" + pack + "/inventory/background/" + str(amountHotbar[i] - math.floor(amountHotbar[i] / 10) * 10) + ".png"), (i * 50 + 40, 540))
 
     #draw to the screen
     for i in range(1,101):

@@ -1,0 +1,43 @@
+21w01a:
+- Added hotbar
+
+20w52a:
+- Added Wood Logs
+- Moved select.png into the textures folder
+
+20w51i:
+- Added World Generation
+
+20w51h:
+- Added Textures
+
+20w51g:
+- Added placing and breaking blocks
+
+20w51f:
+- Added Map Movement for Y axis
+
+20w51e:
+- Added Stone
+
+20w51d:
+- Fixed Grass turning into dirt TTTIS
+
+20w51c:
+- World is now 99 blocks long
+
+20w51b:
+- Added Map Movement for X axis
+
+20w51a:
+- Added save function
+
+20w50c:
+- Added Grass
+- Added Tile to Tile Interaction Support (TTTIS)
+
+20w50b:
+- Added Block Collision
+
+20w50a:
+- Added a ground
