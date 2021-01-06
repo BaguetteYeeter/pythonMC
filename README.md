@@ -6,7 +6,7 @@ Arrow keys: Move
 
 W A S D: Move select box
 
-- = go back in hotbar
+minus = go back in hotbar
 
 = = go forward in hotbar
 
