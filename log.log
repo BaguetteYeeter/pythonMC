@@ -1,3 +1,10 @@
+21w01b:
+- Converted world type to matrix
+- Changed moving mechanic to move the map more
+- World is now 256 blocks long
+- Added stacks of items
+- Added multiple worlds
+
 21w01a:
 - Added hotbar
 

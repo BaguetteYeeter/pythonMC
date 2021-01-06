@@ -1,6 +1,5 @@
 import pygame
 import random
-from world import *
 import math
 import sys
 import getopt
@@ -20,15 +19,16 @@ pygame.display.set_caption("pythonMC")
 pack = "default"
 generateWorld = 0
 seed = random.randint(1000, 999999)
+worldNumber = 1
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hp:gs:", ["pack=", "generate", "seed="])
+    opts, args = getopt.getopt(sys.argv[1:], "hp:gs:w:", ["pack=", "generate", "seed=", "world="])
 except getopt.GetoptError:
-    print("main.py -p [texture pack]")
+    print("main.py -p [texture pack] -g -s [seed] -w [world]")
     sys.exit(2)
 for opt, arg in opts:
     if opt == "-h":
-        print("main.py -p [texture pack]")
+        print("main.py -p [texture pack] -g -s [seed] -w [world]")
         sys.exit()
     elif opt in ("-p", "--pack"):
         pack = arg
@@ -37,6 +37,8 @@ for opt, arg in opts:
         generateWorld = 1
     elif opt in ("-s", "--seed"):
         seed = int(arg)
+    elif opt in ("-w", "--world"):
+        worldNumber = int(arg)
 
 random.seed(seed)
 
@@ -67,398 +69,61 @@ class textures:
     select = pygame.image.load("textures/" + pack + "/select.png")
     print("done")
 
-#lag
+if worldNumber == 1:
+    from world import *
+elif worldNumber == 2:
+    from world2 import *
+elif worldNumber == 3:
+    from world3 import *
+elif worldNumber == 4:
+    from world4 import *
+elif worldNumber == 5:
+    from world5 import *
+else:
+    print("-w must be a number between 1 and 5")
+    
+#convert cells into map
 def loadMap(locX, locY):
     for i in range(1, 11):
-        if locY == 0:
-            cells[i] = blockA[i + locX]
-            cells[i+10] = blockB[i + locX]
-            cells[i+20] = blockC[i + locX]
-            cells[i+30] = blockD[i + locX]
-            cells[i+40] = blockE[i + locX]
-            cells[i+50] = blockF[i + locX]
-            cells[i+60] = blockG[i + locX]
-            cells[i+70] = blockH[i + locX]
-            cells[i+80] = blockI[i + locX]
-            cells[i+90] = blockJ[i + locX]
-        if locY == 1:
-            cells[i] = blockB[i + locX]
-            cells[i+10] = blockC[i + locX]
-            cells[i+20] = blockD[i + locX]
-            cells[i+30] = blockE[i + locX]
-            cells[i+40] = blockF[i + locX]
-            cells[i+50] = blockG[i + locX]
-            cells[i+60] = blockH[i + locX]
-            cells[i+70] = blockI[i + locX]
-            cells[i+80] = blockJ[i + locX]
-            cells[i+90] = blockK[i + locX]
-        if locY == 2:
-            cells[i] = blockC[i + locX]
-            cells[i+10] = blockD[i + locX]
-            cells[i+20] = blockE[i + locX]
-            cells[i+30] = blockF[i + locX]
-            cells[i+40] = blockG[i + locX]
-            cells[i+50] = blockH[i + locX]
-            cells[i+60] = blockI[i + locX]
-            cells[i+70] = blockJ[i + locX]
-            cells[i+80] = blockK[i + locX]
-            cells[i+90] = blockL[i + locX]
-        if locY == 3:
-            cells[i] = blockD[i + locX]
-            cells[i+10] = blockE[i + locX]
-            cells[i+20] = blockF[i + locX]
-            cells[i+30] = blockG[i + locX]
-            cells[i+40] = blockH[i + locX]
-            cells[i+50] = blockI[i + locX]
-            cells[i+60] = blockJ[i + locX]
-            cells[i+70] = blockK[i + locX]
-            cells[i+80] = blockL[i + locX]
-            cells[i+90] = blockM[i + locX]
-        if locY == 4:
-            cells[i] = blockE[i + locX]
-            cells[i+10] = blockF[i + locX]
-            cells[i+20] = blockG[i + locX]
-            cells[i+30] = blockH[i + locX]
-            cells[i+40] = blockI[i + locX]
-            cells[i+50] = blockJ[i + locX]
-            cells[i+60] = blockK[i + locX]
-            cells[i+70] = blockL[i + locX]
-            cells[i+80] = blockM[i + locX]
-            cells[i+90] = blockN[i + locX]
-        if locY == 5:
-            cells[i] = blockF[i + locX]
-            cells[i+10] = blockG[i + locX]
-            cells[i+20] = blockH[i + locX]
-            cells[i+30] = blockI[i + locX]
-            cells[i+40] = blockJ[i + locX]
-            cells[i+50] = blockK[i + locX]
-            cells[i+60] = blockL[i + locX]
-            cells[i+70] = blockM[i + locX]
-            cells[i+80] = blockN[i + locX]
-            cells[i+90] = blockO[i + locX]
-        if locY == 6:
-            cells[i] = blockG[i + locX]
-            cells[i+10] = blockH[i + locX]
-            cells[i+20] = blockI[i + locX]
-            cells[i+30] = blockJ[i + locX]
-            cells[i+40] = blockK[i + locX]
-            cells[i+50] = blockL[i + locX]
-            cells[i+60] = blockM[i + locX]
-            cells[i+70] = blockN[i + locX]
-            cells[i+80] = blockO[i + locX]
-            cells[i+90] = blockP[i + locX]
-        if locY == 7:
-            cells[i] = blockH[i + locX]
-            cells[i+10] = blockI[i + locX]
-            cells[i+20] = blockJ[i + locX]
-            cells[i+30] = blockK[i + locX]
-            cells[i+40] = blockL[i + locX]
-            cells[i+50] = blockM[i + locX]
-            cells[i+60] = blockN[i + locX]
-            cells[i+70] = blockO[i + locX]
-            cells[i+80] = blockP[i + locX]
-            cells[i+90] = blockQ[i + locX]
-        if locY == 8:
-            cells[i] = blockI[i + locX]
-            cells[i+10] = blockJ[i + locX]
-            cells[i+20] = blockK[i + locX]
-            cells[i+30] = blockL[i + locX]
-            cells[i+40] = blockM[i + locX]
-            cells[i+50] = blockN[i + locX]
-            cells[i+60] = blockO[i + locX]
-            cells[i+70] = blockP[i + locX]
-            cells[i+80] = blockQ[i + locX]
-            cells[i+90] = blockR[i + locX]
-        if locY == 9:
-            cells[i] = blockJ[i + locX]
-            cells[i+10] = blockK[i + locX]
-            cells[i+20] = blockL[i + locX]
-            cells[i+30] = blockM[i + locX]
-            cells[i+40] = blockN[i + locX]
-            cells[i+50] = blockO[i + locX]
-            cells[i+60] = blockP[i + locX]
-            cells[i+70] = blockQ[i + locX]
-            cells[i+80] = blockR[i + locX]
-            cells[i+90] = blockS[i + locX]
-        if locY == 10:
-            cells[i] = blockK[i + locX]
-            cells[i+10] = blockL[i + locX]
-            cells[i+20] = blockM[i + locX]
-            cells[i+30] = blockN[i + locX]
-            cells[i+40] = blockO[i + locX]
-            cells[i+50] = blockP[i + locX]
-            cells[i+60] = blockQ[i + locX]
-            cells[i+70] = blockR[i + locX]
-            cells[i+80] = blockS[i + locX]
-            cells[i+90] = blockT[i + locX]
-        if locY == 11:
-            cells[i] = blockL[i + locX]
-            cells[i+10] = blockM[i + locX]
-            cells[i+20] = blockN[i + locX]
-            cells[i+30] = blockO[i + locX]
-            cells[i+40] = blockP[i + locX]
-            cells[i+50] = blockQ[i + locX]
-            cells[i+60] = blockR[i + locX]
-            cells[i+70] = blockS[i + locX]
-            cells[i+80] = blockT[i + locX]
-            cells[i+90] = blockU[i + locX]
-        if locY == 12:
-            cells[i] = blockM[i + locX]
-            cells[i+10] = blockN[i + locX]
-            cells[i+20] = blockO[i + locX]
-            cells[i+30] = blockP[i + locX]
-            cells[i+40] = blockQ[i + locX]
-            cells[i+50] = blockR[i + locX]
-            cells[i+60] = blockS[i + locX]
-            cells[i+70] = blockT[i + locX]
-            cells[i+80] = blockU[i + locX]
-            cells[i+90] = blockV[i + locX]
-        if locY == 13:
-            cells[i] = blockN[i + locX]
-            cells[i+10] = blockO[i + locX]
-            cells[i+20] = blockP[i + locX]
-            cells[i+30] = blockQ[i + locX]
-            cells[i+40] = blockR[i + locX]
-            cells[i+50] = blockS[i + locX]
-            cells[i+60] = blockT[i + locX]
-            cells[i+70] = blockU[i + locX]
-            cells[i+80] = blockV[i + locX]
-            cells[i+90] = blockW[i + locX]
-        if locY == 14:
-            cells[i] = blockO[i + locX]
-            cells[i+10] = blockP[i + locX]
-            cells[i+20] = blockQ[i + locX]
-            cells[i+30] = blockR[i + locX]
-            cells[i+40] = blockS[i + locX]
-            cells[i+50] = blockT[i + locX]
-            cells[i+60] = blockU[i + locX]
-            cells[i+70] = blockV[i + locX]
-            cells[i+80] = blockW[i + locX]
-            cells[i+90] = blockX[i + locX]
-        if locY == 15:
-            cells[i] = blockP[i + locX]
-            cells[i+10] = blockQ[i + locX]
-            cells[i+20] = blockR[i + locX]
-            cells[i+30] = blockS[i + locX]
-            cells[i+40] = blockT[i + locX]
-            cells[i+50] = blockU[i + locX]
-            cells[i+60] = blockV[i + locX]
-            cells[i+70] = blockW[i + locX]
-            cells[i+80] = blockX[i + locX]
-            cells[i+90] = blockY[i + locX]
-        if locY == 16:
-            cells[i] = blockQ[i + locX]
-            cells[i+10] = blockR[i + locX]
-            cells[i+20] = blockS[i + locX]
-            cells[i+30] = blockT[i + locX]
-            cells[i+40] = blockU[i + locX]
-            cells[i+50] = blockV[i + locX]
-            cells[i+60] = blockW[i + locX]
-            cells[i+70] = blockX[i + locX]
-            cells[i+80] = blockY[i + locX]
-            cells[i+90] = blockZ[i + locX]
+        cells[i + 0] =  map[locY + 0][locX + i]
+        cells[i + 10] = map[locY + 1][locX + i]
+        cells[i + 20] = map[locY + 2][locX + i]
+        cells[i + 30] = map[locY + 3][locX + i]
+        cells[i + 40] = map[locY + 4][locX + i]
+        cells[i + 50] = map[locY + 5][locX + i]
+        cells[i + 60] = map[locY + 6][locX + i]
+        cells[i + 70] = map[locY + 7][locX + i]
+        cells[i + 80] = map[locY + 8][locX + i]
+        cells[i + 90] = map[locY + 9][locX + i]
 
 def saveMap(locX, locY):
     for i in range(1, 11):
-        if locY == 0:
-            blockA[i + locX] = cells[i]
-            blockB[i + locX] = cells[i+10]
-            blockC[i + locX] = cells[i+20]
-            blockD[i + locX] = cells[i+30]
-            blockE[i + locX] = cells[i+40]
-            blockF[i + locX] = cells[i+50]
-            blockG[i + locX] = cells[i+60]
-            blockH[i + locX] = cells[i+70]
-            blockI[i + locX] = cells[i+80]
-            blockJ[i + locX] = cells[i+90]
-        if locY == 1:
-            blockB[i + locX] = cells[i]
-            blockC[i + locX] = cells[i+10]
-            blockD[i + locX] = cells[i+20]
-            blockE[i + locX] = cells[i+30]
-            blockF[i + locX] = cells[i+40]
-            blockG[i + locX] = cells[i+50]
-            blockH[i + locX] = cells[i+60]
-            blockI[i + locX] = cells[i+70]
-            blockJ[i + locX] = cells[i+80]
-            blockK[i + locX] = cells[i+90]
-        if locY == 2:
-            blockC[i + locX] = cells[i]
-            blockD[i + locX] = cells[i+10]
-            blockE[i + locX] = cells[i+20]
-            blockF[i + locX] = cells[i+30]
-            blockG[i + locX] = cells[i+40]
-            blockH[i + locX] = cells[i+50]
-            blockI[i + locX] = cells[i+60]
-            blockJ[i + locX] = cells[i+70]
-            blockK[i + locX] = cells[i+80]
-            blockL[i + locX] = cells[i+90]
-        if locY == 3:
-            blockD[i + locX] = cells[i]
-            blockE[i + locX] = cells[i+10]
-            blockF[i + locX] = cells[i+20]
-            blockG[i + locX] = cells[i+30]
-            blockH[i + locX] = cells[i+40]
-            blockI[i + locX] = cells[i+50]
-            blockJ[i + locX] = cells[i+60]
-            blockK[i + locX] = cells[i+70]
-            blockL[i + locX] = cells[i+80]
-            blockM[i + locX] = cells[i+90]
-        if locY == 4:
-            blockE[i + locX] = cells[i]
-            blockF[i + locX] = cells[i+10]
-            blockG[i + locX] = cells[i+20]
-            blockH[i + locX] = cells[i+30]
-            blockI[i + locX] = cells[i+40]
-            blockJ[i + locX] = cells[i+50]
-            blockK[i + locX] = cells[i+60]
-            blockL[i + locX] = cells[i+70]
-            blockM[i + locX] = cells[i+80]
-            blockN[i + locX] = cells[i+90]
-        if locY == 5:
-            blockF[i + locX] = cells[i]
-            blockG[i + locX] = cells[i+10]
-            blockH[i + locX] = cells[i+20]
-            blockI[i + locX] = cells[i+30]
-            blockJ[i + locX] = cells[i+40]
-            blockK[i + locX] = cells[i+50]
-            blockL[i + locX] = cells[i+60]
-            blockM[i + locX] = cells[i+70]
-            blockN[i + locX] = cells[i+80]
-            blockO[i + locX] = cells[i+90]
-        if locY == 6:
-            blockG[i + locX] = cells[i]
-            blockH[i + locX] = cells[i+10]
-            blockI[i + locX] = cells[i+20]
-            blockJ[i + locX] = cells[i+30]
-            blockK[i + locX] = cells[i+40]
-            blockL[i + locX] = cells[i+50]
-            blockM[i + locX] = cells[i+60]
-            blockN[i + locX] = cells[i+70]
-            blockO[i + locX] = cells[i+80]
-            blockP[i + locX] = cells[i+90]
-        if locY == 7:
-            blockH[i + locX] = cells[i]
-            blockI[i + locX] = cells[i+10]
-            blockJ[i + locX] = cells[i+20]
-            blockK[i + locX] = cells[i+30]
-            blockL[i + locX] = cells[i+40]
-            blockM[i + locX] = cells[i+50]
-            blockN[i + locX] = cells[i+60]
-            blockO[i + locX] = cells[i+70]
-            blockP[i + locX] = cells[i+80]
-            blockQ[i + locX] = cells[i+90]
-        if locY == 8:
-            blockI[i + locX] = cells[i]
-            blockJ[i + locX] = cells[i+10]
-            blockK[i + locX] = cells[i+20]
-            blockL[i + locX] = cells[i+30]
-            blockM[i + locX] = cells[i+40]
-            blockN[i + locX] = cells[i+50]
-            blockO[i + locX] = cells[i+60]
-            blockP[i + locX] = cells[i+70]
-            blockQ[i + locX] = cells[i+80]
-            blockR[i + locX] = cells[i+90]
-        if locY == 9:
-            blockJ[i + locX] = cells[i]
-            blockK[i + locX] = cells[i+10]
-            blockL[i + locX] = cells[i+20]
-            blockM[i + locX] = cells[i+30]
-            blockN[i + locX] = cells[i+40]
-            blockO[i + locX] = cells[i+50]
-            blockP[i + locX] = cells[i+60]
-            blockQ[i + locX] = cells[i+70]
-            blockR[i + locX] = cells[i+80]
-            blockS[i + locX] = cells[i+90]
-        if locY == 10:
-            blockK[i + locX] = cells[i]
-            blockL[i + locX] = cells[i+10]
-            blockM[i + locX] = cells[i+20]
-            blockN[i + locX] = cells[i+30]
-            blockO[i + locX] = cells[i+40]
-            blockP[i + locX] = cells[i+50]
-            blockQ[i + locX] = cells[i+60]
-            blockR[i + locX] = cells[i+70]
-            blockS[i + locX] = cells[i+80]
-            blockT[i + locX] = cells[i+90]
-        if locY == 11:
-            blockL[i + locX] = cells[i]
-            blockM[i + locX] = cells[i+10]
-            blockN[i + locX] = cells[i+20]
-            blockO[i + locX] = cells[i+30]
-            blockP[i + locX] = cells[i+40]
-            blockQ[i + locX] = cells[i+50]
-            blockR[i + locX] = cells[i+60]
-            blockS[i + locX] = cells[i+70]
-            blockT[i + locX] = cells[i+80]
-            blockU[i + locX] = cells[i+90]
-        if locY == 12:
-            blockM[i + locX] = cells[i]
-            blockN[i + locX] = cells[i+10]
-            blockO[i + locX] = cells[i+20]
-            blockP[i + locX] = cells[i+30]
-            blockQ[i + locX] = cells[i+40]
-            blockR[i + locX] = cells[i+50]
-            blockS[i + locX] = cells[i+60]
-            blockT[i + locX] = cells[i+70]
-            blockU[i + locX] = cells[i+80]
-            blockV[i + locX] = cells[i+90]
-        if locY == 13:
-            blockN[i + locX] = cells[i]
-            blockO[i + locX] = cells[i+10]
-            blockP[i + locX] = cells[i+20]
-            blockQ[i + locX] = cells[i+30]
-            blockR[i + locX] = cells[i+40]
-            blockS[i + locX] = cells[i+50]
-            blockT[i + locX] = cells[i+60]
-            blockU[i + locX] = cells[i+70]
-            blockV[i + locX] = cells[i+80]
-            blockW[i + locX] = cells[i+90]
-        if locY == 14:
-            blockO[i + locX] = cells[i]
-            blockP[i + locX] = cells[i+10]
-            blockQ[i + locX] = cells[i+20]
-            blockR[i + locX] = cells[i+30]
-            blockS[i + locX] = cells[i+40]
-            blockT[i + locX] = cells[i+50]
-            blockU[i + locX] = cells[i+60]
-            blockV[i + locX] = cells[i+70]
-            blockW[i + locX] = cells[i+80]
-            blockX[i + locX] = cells[i+90]
-        if locY == 15:
-            blockP[i + locX] = cells[i]
-            blockQ[i + locX] = cells[i+10]
-            blockR[i + locX] = cells[i+20]
-            blockS[i + locX] = cells[i+30]
-            blockT[i + locX] = cells[i+40]
-            blockU[i + locX] = cells[i+50]
-            blockV[i + locX] = cells[i+60]
-            blockW[i + locX] = cells[i+70]
-            blockX[i + locX] = cells[i+80]
-            blockY[i + locX] = cells[i+90]
-        if locY == 16:
-            blockQ[i + locX] = cells[i]
-            blockR[i + locX] = cells[i+10]
-            blockS[i + locX] = cells[i+20]
-            blockT[i + locX] = cells[i+30]
-            blockU[i + locX] = cells[i+40]
-            blockV[i + locX] = cells[i+50]
-            blockW[i + locX] = cells[i+60]
-            blockX[i + locX] = cells[i+70]
-            blockY[i + locX] = cells[i+80]
-            blockZ[i + locX] = cells[i+90]
+        map[locY + 0][locX + i] = cells[i + 0]
+        map[locY + 1][locX + i] = cells[i + 10]
+        map[locY + 2][locX + i] = cells[i + 20]
+        map[locY + 3][locX + i] = cells[i + 30]
+        map[locY + 4][locX + i] = cells[i + 40]
+        map[locY + 5][locX + i] = cells[i + 50]
+        map[locY + 6][locX + i] = cells[i + 60]
+        map[locY + 7][locX + i] = cells[i + 70]
+        map[locY + 8][locX + i] = cells[i + 80]
+        map[locY + 9][locX + i] = cells[i + 90]
+
 
 def save():
     f = open("world.py", "w")
-    f.write("\nblockA = " + str(blockA) + "\nblockB = " + str(blockB) + "\nblockC = " + str(blockC) + "\nblockD = " + str(blockD) + "\nblockE = " + str(blockE) + "\nblockF = " + str(blockF) + "\nblockG = " + str(blockG) + "\nblockH = " + str(blockH) + "\nblockI = " + str(blockI) + "\nblockJ = " + str(blockJ) + "\nblockK = " + str(blockK) + "\nblockL = " + str(blockL) + "\nblockM = " + str(blockM) + "\nblockN = " + str(blockN) + "\nblockO = " + str(blockO) + "\nblockP = " + str(blockP) + "\nblockQ = " + str(blockQ) + "\nblockR = " + str(blockR) + "\nblockS = " + str(blockS) + "\nblockT = " + str(blockT) + "\nblockU = " + str(blockU) + "\nblockV = " + str(blockV) + "\nblockW = " + str(blockW) + "\nblockX = " + str(blockX) + "\nblockY = " + str(blockY) + "\nblockZ = " + str(blockZ) + "\nhotbar = " + str(hotbar) + "\namountHotbar = " + str(amountHotbar))
+    f.write("\nmap = " + str(map) + "\nhotbar = " + str(hotbar) + "\namountHotbar = " + str(amountHotbar))
     f.close()
 
 def addHotbar():
     done = 0
     for i in range(0, 10):
         if cells[selectCell] == hotbar[i]:
-            amountHotbar[i] += 1
-            return
+            if amountHotbar[i] == 64:
+                continue
+            else:
+                amountHotbar[i] += 1
+                return
     for i in range(0, 10):
         if hotbar[i] == 0:
             amountHotbar[i] += 1
@@ -480,39 +145,39 @@ loadMap(locX, locY)
 #generate a world
 if generateWorld == 1:
     print("Generating World")
-    for i in range(1, 100):
+    for i in range(1, len(map[0])):
         loadMap(locX, locY)
-        blockA[i] = 0
-        blockB[i] = 0
-        blockC[i] = 0
-        blockD[i] = 0
-        blockE[i] = 0
-        blockF[i] = 0
-        blockG[i] = 0
-        blockH[i] = 0
-        blockI[i] = 0
-        blockJ[i] = 0
-        blockK[i] = 0
-        blockL[i] = 4
-        blockM[i] = 4
-        blockN[i] = 4
-        blockO[i] = 4
-        blockP[i] = 4
-        blockQ[i] = 4
-        blockR[i] = 4
-        blockS[i] = 4
-        blockT[i] = 4
-        blockU[i] = 4
-        blockV[i] = 4
-        blockW[i] = 4
-        blockX[i] = 4
-        blockY[i] = 4
-        blockZ[i] = 5
+        map[0][i] = 0
+        map[1][i] = 0
+        map[2][i] = 0
+        map[3][i] = 0
+        map[4][i] = 0
+        map[5][i] = 0
+        map[6][i] = 0
+        map[7][i] = 0
+        map[8][i] = 0
+        map[9][i] = 0
+        map[10][i] = 0
+        map[11][i] = 4
+        map[12][i] = 4
+        map[13][i] = 4
+        map[14][i] = 4
+        map[15][i] = 4
+        map[16][i] = 4
+        map[17][i] = 4
+        map[18][i] = 4
+        map[19][i] = 4
+        map[20][i] = 4
+        map[21][i] = 4
+        map[22][i] = 4
+        map[23][i] = 4
+        map[24][i] = 4
+        map[25][i] = 5
         saveMap(locX, locY)
     save()
     locY = 1
     loadMap(locX, locY)
-    for i in range(1, 89):
+    for i in range(1, len(map[0]) - 11):
         grassHeight = random.randint(2,8)
         if math.floor(grassHeight) in (0, 1, 2):
             grassHeight = 3
@@ -531,7 +196,7 @@ if generateWorld == 1:
         saveMap(locX, locY)
         locX += 1
         loadMap(locX, locY)
-        print(str(i) + "% done")
+        print(str(int(i / 2.5)) + "% done")
     locX = 0
     locY = 0
     loadMap(locX, locY)
@@ -561,7 +226,7 @@ while run:
 
     #gravity / down
     if noGravity == 0:
-        if currentCell > 90:
+        if currentCell > 80 and locY != 16:
             locY += 1
             loadMap(locX, locY)
             if cells[currentCell] == 0:
@@ -586,13 +251,17 @@ while run:
     if keys[pygame.K_UP]:
         if currentCell < 91:
             if cells[currentCell + 10] != 0:
-                if currentCell < 10:
+                if currentCell < 50:
                     if locY != 0:
                         locY -= 1
-                    loadMap(locX, locY)
-                    if cells[currentCell] != 0:
-                        currentCell += 10
-                        selectCell += 10
+                        loadMap(locX, locY)
+                        if cells[currentCell] != 0:
+                            currentCell += 10
+                            selectCell += 10
+                    else:
+                        if cells[currentCell - 10] == 0:
+                            currentCell -= 10
+                            selectCell -= 10
                 elif cells[currentCell - 10] == 0:
                     currentCell -= 10
                     if selectCell > 11:
@@ -602,20 +271,25 @@ while run:
                     isJump = True
     if keys[pygame.K_LEFT]:
         if True:
-            if (currentCell - 1) / 10 == int((currentCell - 1) / 10):
-                if locX!= 0:
-                    locX-= 1
+            if (currentCell - 1) / 10 == int((currentCell - 1) / 10) or (currentCell - 2) / 10 == int((currentCell - 2) / 10) or (currentCell - 3) / 10 == int((currentCell - 3) / 10) or (currentCell - 4) / 10 == int((currentCell - 4) / 10) or (currentCell - 5) / 10 == int((currentCell - 5) / 10):
+                if locX != 0:
+                    locX -= 1
                     loadMap(locX, locY)
                     if cells[currentCell] != 0:
                         currentCell += 1
                         selectCell += 1
+                else:
+                    if cells[currentCell - 1] == 0:
+                        if (currentCell - 1) / 10 != int((currentCell - 1) / 10):
+                            currentCell -= 1
+                            selectCell -= 1
             else:
                 if cells[currentCell - 1] == 0:
                     currentCell -= 1
                     if (selectCell - 1) / 10 != int((selectCell - 1) / 10):
                         selectCell -= 1
     if keys[pygame.K_RIGHT]:
-            if currentCell / 10 == int(currentCell / 10):
+            if currentCell / 10 == int(currentCell / 10) or (currentCell + 1) / 10 == int((currentCell + 1) / 10) or (currentCell + 2) / 10 == int((currentCell + 2) / 10) or (currentCell + 3) / 10 == int((currentCell + 3) / 10) or (currentCell + 4) / 10 == int((currentCell + 4) / 10):
                 locX= locX+ 1
                 loadMap(locX, locY)
                 if cells[currentCell] != 0:
@@ -667,7 +341,7 @@ while run:
     loadMap(locX, locY)
 
     #tile to tile interaction support (TTTIS)
-    for i in range(1,101):
+    for i in range(1, 101):
         if cells[i] == 2:
             if cells[i - 10] == 0:
                 grassChance = random.randint(1, 10)
