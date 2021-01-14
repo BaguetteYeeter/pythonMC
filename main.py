@@ -20,11 +20,12 @@ pack = "default"
 generateWorld = 0
 seed = random.randint(1000, 999999)
 worldNumber = 1
+gamemode = "s"
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hp:gs:w:", ["pack=", "generate", "seed=", "world="])
+    opts, args = getopt.getopt(sys.argv[1:], "hp:gs:w:m:", ["pack=", "generate", "seed=", "world=", "gamemode="])
 except getopt.GetoptError:
-    print("main.py -p [texture pack] -g -s [seed] -w [world]")
+    print("main.py -p [texture pack] -g -s [seed] -w [world] -m [gamemode]")
     sys.exit(2)
 for opt, arg in opts:
     if opt == "-h":
@@ -39,6 +40,11 @@ for opt, arg in opts:
         seed = int(arg)
     elif opt in ("-w", "--world"):
         worldNumber = int(arg)
+    elif opt in ("-m", "--gamemode"):
+        if arg in ("s", "survival"):
+            gamemode = "s"
+        elif arg in ("c", "creative"):
+            gamemode = "c"
 
 random.seed(seed)
 
@@ -81,7 +87,7 @@ elif worldNumber == 5:
     from world5 import *
 else:
     print("-w must be a number between 1 and 5")
-    
+
 #convert cells into map
 def loadMap(locX, locY):
     for i in range(1, 11):
@@ -116,26 +122,28 @@ def save():
     f.close()
 
 def addHotbar():
-    done = 0
-    for i in range(0, 10):
-        if cells[selectCell] == hotbar[i]:
-            if amountHotbar[i] == 64:
-                continue
-            else:
+    if gamemode == "s":
+        done = 0
+        for i in range(0, 10):
+            if cells[selectCell] == hotbar[i]:
+                if amountHotbar[i] == 64:
+                    continue
+                else:
+                    amountHotbar[i] += 1
+                    return
+        for i in range(0, 10):
+            if hotbar[i] == 0:
                 amountHotbar[i] += 1
+                hotbar[i] = cells[selectCell]
+                done = 1
+            if done == 1:
+                done = 0
                 return
-    for i in range(0, 10):
-        if hotbar[i] == 0:
-            amountHotbar[i] += 1
-            hotbar[i] = cells[selectCell]
-            done = 1
-        if done == 1:
-            done = 0
-            return
 def removeHotbar():
-    amountHotbar[currentHotbarCell] -= 1
-    if amountHotbar[currentHotbarCell] == 0:
-        hotbar[currentHotbarCell] = 0
+    if gamemode == "s":
+        amountHotbar[currentHotbarCell] -= 1
+        if amountHotbar[currentHotbarCell] == 0:
+            hotbar[currentHotbarCell] = 0
 
 locX = 0
 locY = 0
@@ -209,6 +217,7 @@ prevCell = 0
 noGravity = 0
 isJump = False
 currentHotbarCell = 0
+mode = "gravity"
 hotel = "trivago"
 
 #loop
@@ -225,7 +234,7 @@ while run:
     mainScreen.fill((0, 0, 0))
 
     #gravity / down
-    if noGravity == 0:
+    if noGravity == 0 and mode == "gravity":
         if currentCell > 80 and locY != 16:
             locY += 1
             loadMap(locX, locY)
@@ -246,11 +255,30 @@ while run:
             isJump = False
     else:
         noGravity -= 1
+    if keys[pygame.K_DOWN] and mode == "fly":
+        if currentCell > 80 and locY != 16:
+            locY += 1
+            loadMap(locX, locY)
+            if cells[currentCell] == 0:
+                locY += 1
+                loadMap(locX, locY)
+                if cells[currentCell] != 0:
+                    currentCell -= 10
+                    selectCell -= 10
+            if cells[currentCell] != 0:
+                currentCell -= 10
+                selectCell -= 10
+        else:
+            if cells[currentCell + 10] == 0:
+                currentCell += 10
+                if selectCell < 91:
+                    selectCell += 10
+            isJump = False
 
     #keyboard input
     if keys[pygame.K_UP]:
         if currentCell < 91:
-            if cells[currentCell + 10] != 0:
+            if cells[currentCell + 10] != 0 or mode == "fly":
                 if currentCell < 50:
                     if locY != 0:
                         locY -= 1
@@ -331,6 +359,14 @@ while run:
             cells[selectCell] = hotbar[currentHotbarCell]
             removeHotbar()
             saveMap(locX, locY)
+    if gamemode == "c":
+        if keys[pygame.K_LSHIFT]:
+            if mode == "gravity":
+                mode = "fly"
+        if keys[pygame.K_RSHIFT]:
+            if mode == "fly":
+                mode = "gravity"
+                noGravity = 0
 
     #i have no clue
     if prevCell != currentCell:
